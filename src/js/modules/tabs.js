@@ -1,8 +1,10 @@
+// tabs
 const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
+        //Передача селекторов и получение переменных
         const header = document.querySelector(headerSelector),
             tab = document.querySelectorAll(tabSelector),
             content = document.querySelectorAll(contentSelector);
-
+        // Функция скрывающий определённый контент
         function hideTabContent(){
                 content.forEach(item =>{
                     item.style.display = 'none';
@@ -11,20 +13,24 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
                     item.classList.remove(activeClass);
                 })
         }
+        // Функция открывающий определённый контент
         function showTabContent(i = 0){
             content[i].style.display = 'block';
             tab[i].classList.add(activeClass);
         }
         hideTabContent();
         showTabContent();
-
-        header.addEventListener('click',(e) => {
+        
+        // Отслеживание таба,который клинул пользователь
+        header.addEventListener('click',(e) => {                               
             const target = e.target;
-            if (target &&                                                              // Проверка самого target
-                (target.classList.contains(tabSelector.replace(/\./, "")) ||          // Проверка что кликнули туда
+            // Проверка самого target и что кликнули туда 
+            if (target &&                                                                                                                
+                (target.classList.contains(tabSelector.replace(/\./, "")) ||         
              target.parentNode.classList.contains(tabSelector.replace(/\./, "")))){
+                //Перебор табов
                 tab.forEach((item, i) => {
-                    if (target == item || target.parentNode == item){      //Перебор табов
+                    if (target == item || target.parentNode == item){      
                         hideTabContent();
                         showTabContent(i);
                     }
