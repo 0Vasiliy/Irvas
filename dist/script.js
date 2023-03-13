@@ -14107,6 +14107,7 @@ window.addEventListener('DOMContentLoaded', () => {
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content >div >div', 'after_click');
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
 });
 
@@ -14121,10 +14122,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//Отправка формы на сайт
 const forms = () => {
   // Получаем элементы
   const form = document.querySelectorAll('form'),
-    input = document.querySelectorAll('input');
+    inputs = document.querySelectorAll('input'),
+    phoneInputs = document.querySelectorAll('input[name="user_phone"]');
+
+  // Проверка на не число и удаление не верных данных
+  phoneInputs.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/\D/, '');
+    });
+  });
 
   // Создаём объект с сообщениями
   const message = {
@@ -14144,7 +14154,7 @@ const forms = () => {
   };
   // Функция по очищению всех input
   const clearInputs = () => {
-    clearInputs.forEach(item => {
+    inputs.forEach(item => {
       item.value = '';
     });
   };
@@ -14160,6 +14170,7 @@ const forms = () => {
 
       // Собираем все данные из введёной формы
       const formData = new FormData(item);
+
       // Отправляем запрос на сервер
       postData('assets/server.php', formData).then(res => {
         statusMessage.textContent = message.success;
@@ -14185,11 +14196,15 @@ const forms = () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+// modal
 const modals = () => {
+  //Передача селекторов и получение переменных
   function bindModal(triggerSelector, modalSelector, closeSelector) {
     const trigger = document.querySelectorAll(triggerSelector),
       modal = document.querySelector(modalSelector),
       close = document.querySelector(closeSelector);
+
+    // Передача в функцию несколько элементов и вешается обработчик
     trigger.forEach(item => {
       item.addEventListener('click', e => {
         if (e.target) {
@@ -14199,10 +14214,14 @@ const modals = () => {
         document.body.style.overflow = "hidden";
       });
     });
+
+    // Закрытие modal
     close.addEventListener('click', () => {
       modal.style.display = "none";
       document.body.style.overflow = "";
     });
+
+    // Закрытие modal при клике вне модалного окна
     modal.addEventListener('click', e => {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -14210,6 +14229,8 @@ const modals = () => {
       }
     });
   }
+
+  // Функция всплытия модального окна через промежуток времени
   function showModalByTime(selector, time) {
     setTimeout(function () {
       document.querySelector(selector).style.display = 'block';
@@ -14218,9 +14239,9 @@ const modals = () => {
   }
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
   bindModal('.phone_link', '.popup', '.popup .popup_close');
-  //showModalByTime('.popup', 60000);
+  bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
+  showModalByTime('.popup', 60000);
 };
-
 /* harmony default export */ __webpack_exports__["default"] = (modals);
 
 /***/ }),
@@ -14234,10 +14255,14 @@ const modals = () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
+// tabs
+const tabs = function (headerSelector, tabSelector, contentSelector, activeClass) {
+  let display = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'block';
+  //Передача селекторов и получение переменных
   const header = document.querySelector(headerSelector),
     tab = document.querySelectorAll(tabSelector),
     content = document.querySelectorAll(contentSelector);
+  // Функция скрывающий определённый контент
   function hideTabContent() {
     content.forEach(item => {
       item.style.display = 'none';
@@ -14246,23 +14271,23 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
       item.classList.remove(activeClass);
     });
   }
+  // Функция открывающий определённый контент
   function showTabContent() {
     let i = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    content[i].style.display = 'block';
+    content[i].style.display = display;
     tab[i].classList.add(activeClass);
   }
   hideTabContent();
   showTabContent();
+
+  // Отслеживание таба,который клинул пользователь
   header.addEventListener('click', e => {
     const target = e.target;
-    if (target && (
-    // Проверка самого target
-    target.classList.contains(tabSelector.replace(/\./, "")) ||
-    // Проверка что кликнули туда
-    target.parentNode.classList.contains(tabSelector.replace(/\./, "")))) {
+    // Проверка самого target и что кликнули туда 
+    if (target && (target.classList.contains(tabSelector.replace(/\./, "")) || target.parentNode.classList.contains(tabSelector.replace(/\./, "")))) {
+      //Перебор табов
       tab.forEach((item, i) => {
         if (target == item || target.parentNode == item) {
-          //Перебор табов
           hideTabContent();
           showTabContent(i);
         }
