@@ -1,17 +1,13 @@
 //Отправка формы на сайт
-const forms = () => {
+import chekNameinputs from "./chekNameinputs";
+const forms = (state) => {
     // Получаем элементы
     const form = document.querySelectorAll('form'),  
-        inputs = document.querySelectorAll('input'),
-        phoneInputs = document.querySelectorAll('input[name="user_phone"]');
-
+        inputs = document.querySelectorAll('input');
+        
         // Проверка на не число и удаление не верных данных
-        phoneInputs.forEach(item => {
-            item.addEventListener('input', () => {
-                item.value = item.value.replace(/\D/, '');
-            });
-        });
-
+        chekNameinputs('input[name="user_phone"]');
+     
         // Создаём объект с сообщениями
     const message = {
         loading: 'Загрузка...',                      
@@ -46,6 +42,12 @@ const forms = () => {
 
             // Собираем все данные из введёной формы
             const formData = new FormData(item);
+            // Проверка, что это имеено нужное окно формы
+            if(item.getAttribute('data-calc' === 'end')){
+                for (let key in state){
+                    formData.append(key, state[key]);
+                }
+            }
 
             // Отправляем запрос на сервер
             postData('assets/server.php', formData)
