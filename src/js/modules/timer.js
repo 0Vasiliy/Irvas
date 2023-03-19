@@ -1,5 +1,4 @@
-// import { endsWith } from "core-js/core/string";
- // Функция будет получать определённое количество времени и выдавать то время которое осталось до конца акции
+// Функция будет получать определённое количество времени и выдавать то время которое осталось до конца акции
 const timer = (id, deadline) => {
     // Функция подставления 0
     const addZero = (num) => {
@@ -25,7 +24,7 @@ const timer = (id, deadline) => {
             'seconds': seconds
         };
     };
- // Функция которая определённые значения помещает определённые элементы на странице
+ // Функция которая определённые значения, помещает определённые элементы на странице
     const setClock = (selector, endtime) => {
         const timer = document.querySelector(selector),
               days = timer.querySelector("#days"),
